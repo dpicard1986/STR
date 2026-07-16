@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.dave.stragent</string>
+  <key>ProgramArguments</key><array>
+    <string>/usr/bin/python3</string><string>-m</string><string>str_agent.main</string>
+    <string>--source</string><string>gmail</string>
+  </array>
+  <key>WorkingDirectory</key><string>REPLACE_WITH_/path/to/str-agent</string>
+  <key>StartCalendarInterval</key><dict><key>Hour</key><integer>7</integer><key>Minute</key><integer>0</integer></dict>
+  <key>StandardOutPath</key><string>out/run.log</string>
+  <key>StandardErrorPath</key><string>out/run.log</string>
+</dict></plist>

@@ -1,0 +1,61 @@
+# STR Deal-Screening Agent — configuration
+# All underwriting assumptions live here. Edit freely; no code changes needed.
+
+search:
+  states: [VT, NH, MA, ME]
+  max_price: 800000
+  max_ski_miles: 2.0
+  max_beach_miles: 0.25
+  # Active market whitelist (null = all markets in data/markets.csv)
+  markets: [killington, okemo, loon_lincoln, sunday_river, hampton_beach, old_orchard_beach]
+  reject_fractional: true   # quarter-share / timeshare auto-reject
+
+financing:
+  down_payment_pct: 0.20
+  mortgage_rate: 0.0725        # refresh weekly (FRED MORTGAGE30US)
+  term_years: 30
+  closing_cost_pct: 0.03
+  condotel_rate_bump: 0.005
+  condotel_down_pct: 0.25
+
+operating:
+  insurance_pct_of_price: 0.0035
+  insurance_coastal_pct: 0.0060
+  utilities_per_sqft_yr: 4.0    # capped below
+  utilities_min_yr: 3600
+  utilities_max_yr: 6500
+  internet_software_yr: 1200
+  mgmt_fee_pct: 0.0             # self-managed (material participation)
+  revenue_haircut_pct: 0.14     # OTA 3% + supplies 4% + maintenance 5% + vacancy shock 2%
+
+tax:
+  # Owner profile: MA resident, MFJ, top bracket, material participation TRUE,
+  # personal use < 14 days (not a 280A residence — no allocation haircut)
+  marginal_rate: 0.46           # 37% federal + 9% MA (5% + 4% surtax)
+  cap_gain_rate: 0.328          # 20% fed + 3.8% NIIT + 9% MA
+  recapture_sl_rate: 0.25       # unrecaptured 1250
+  land_pct_condo: 0.10
+  land_pct_sfh: 0.20
+  cost_seg_pct: 0.25            # share of improvement basis to 5/7/15-yr property
+  bonus_pct: 1.00               # 100% bonus, permanent for acquisitions after 1/19/2025
+
+projection:
+  hold_years: 10
+  rent_growth: 0.03
+  expense_growth: 0.03
+  selling_cost_pct: 0.06
+  # per-market appreciation lives in data/markets.csv
+
+scoring:
+  w_atroi: 0.50                 # year-1 after-tax ROI
+  w_cashflow: 0.20              # year-1 pre-tax cash-on-cash
+  w_irr10: 0.30                 # 10-yr levered after-tax IRR
+  va_swing: 0.30                # value-add multiplier: final = base * (1 + swing*(VA-50)/50)
+  hot_score: 85
+  hot_atroi: 0.30
+
+email:
+  enabled: false                # set true after Gmail OAuth setup (see README)
+  to: ""                        # your address
+  send_hour_local: 7
+  # If disabled, digest is written to out/digest_YYYY-MM-DD.html

@@ -1,0 +1,11 @@
+address,market,town,state,complex,price,beds,baths,sqft,hoa_annual,property_type,condotel,coastal,dom,cum_price_cut_pct,remarks
+"105 Northbrook Rd #A2, Killington VT",killington,Killington,VT,Northbrook,629000,3,2,1656,8000,condo,0,0,45,0.0,"Spacious 3BR near ski trails"
+"19 High Ridge Rd #A10, Killington VT",killington,Killington,VT,Highridge,579000,2,2,1266,11000,condo,0,0,70,0.033,"Price cut. Pool and spa complex, ski-home access in good snow"
+"57 Alpine Dr #203, Killington VT",killington,Killington,VT,Pinnacle,550000,3,2,1129,9500,condo,0,0,30,0.0,"Top of Killington Road"
+"19 Kettlebrook Rd, Ludlow VT",okemo,Ludlow,VT,Kettlebrook,649000,2,2,1349,9649,condo,0,0,190,0.066,"Direct ski-on ski-off top floor, nicely updated throughout, fully renovated"
+"65-2 Clearbrook Rd, Lincoln NH",loon_lincoln,Lincoln,NH,Clearbrook,439900,2,2,1050,5600,condo,0,0,20,0.0,"Close to Loon entrance, shuttle"
+"14B Westview Rd, Lincoln NH",loon_lincoln,Lincoln,NH,Village of Loon,650000,3,3,1800,7200,condo,0,0,3,0.0,"Village of Loon, rec center"
+"128 Ashworth Ave #303, Hampton NH",hampton_beach,Hampton,NH,Ashworth Corridor,679000,3,3,1413,6000,condo,0,1,15,0.0,"One block to sand, turn-key"
+"407 Ocean Blvd Unit B2, Hampton NH",hampton_beach,Hampton,NH,Ocean Blvd Oceanfront,480000,2,2,989,6500,condo,0,1,25,0.0,"Oceanfront, steps to sand, ocean views from deck"
+"8 Fall Line Dr, Newry ME",sunday_river,Newry,ME,Fall Line,299000,1,1,620,6200,condo,0,0,40,0.0,"Slopeside, direct trail access, indoor pool"
+"Grand Victorian 2BR, Old Orchard Beach ME",old_orchard_beach,Old Orchard Beach,ME,Grand Victorian,675000,2,2,1100,13200,condo,1,1,55,0.0,"Beachfront hotel condo, nightly rentals allowed, turn-key, front desk"

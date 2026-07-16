@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+out/
+.DS_Store
+.gmail_app_password
+token.json
+credentials.json
