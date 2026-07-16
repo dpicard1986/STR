@@ -4,9 +4,13 @@ Usage:
   python -m str_agent.main --demo                       # offline run on data/demo_listings.csv
   python -m str_agent.main --source gmail               # production: parse portal alert emails
   python -m str_agent.main --demo --markets killington,hampton_beach
+
+If ANTHROPIC_API_KEY is set, every run also asks Claude to search Redfin live for
+current top candidates (str_agent/live_search.py) and adds them to the digest with
+links. Pass --no-live-search to skip that even when the key is set.
 """
 from __future__ import annotations
-import argparse, datetime, sys
+import argparse, datetime, os, sys
 from pathlib import Path
 
 try:
@@ -16,6 +20,7 @@ except ImportError:
 
 from . import db as dbm
 from . import ingest
+from . import live_search
 from .underwrite import underwrite, load_csv
 from .score import score_pool
 from .digest import render, deliver
@@ -115,7 +120,14 @@ def run(args):
             if e.get("key") == key and e["event"] == "price_cut":
                 e["new_score"] = r["score"]
 
-    html = render(ranked, events, cfg, today, cfg["search"].get("markets"))
+    live_candidates = []
+    if not args.no_live_search and os.environ.get("ANTHROPIC_API_KEY"):
+        try:
+            live_candidates = live_search.find_candidates(cfg)
+        except Exception as e:  # noqa: BLE001
+            print(f"live search failed: {e}")
+
+    html = render(ranked, events, cfg, today, cfg["search"].get("markets"), live_candidates)
     print(deliver(html, cfg, today))
     for i, r in enumerate(ranked, 1):
         u = r["uw"]
@@ -131,6 +143,8 @@ def main():
     ap.add_argument("--listings", default="data/demo_listings.csv")
     ap.add_argument("--markets", default=None, help="comma-separated market whitelist override")
     ap.add_argument("--demo", action="store_true", help="alias for --source csv with demo data")
+    ap.add_argument("--no-live-search", action="store_true",
+                     help="skip the Claude web-search candidate section even if ANTHROPIC_API_KEY is set")
     args = ap.parse_args()
     if args.demo:
         args.source = "csv"

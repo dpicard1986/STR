@@ -35,6 +35,23 @@ No dependencies required for the demo (PyYAML optional). All assumptions in `con
    python3 -m str_agent.main --source gmail
    ```
 
+## Live picks (Claude web search)
+
+If `ANTHROPIC_API_KEY` is set in the environment, every run also asks Claude to search
+Redfin live for the top candidates matching `config.yaml`'s filters and adds them to the
+digest as a "Live picks" section with Redfin links — independent of the Gmail/CSV
+ingestion pipeline, so it works even before saved-search alerts are set up. It's a fresh
+search each run, so the same candidates showing up again the next day is expected.
+
+```bash
+pip install anthropic
+export ANTHROPIC_API_KEY=sk-ant-...
+python3 -m str_agent.main --source gmail   # or --demo
+```
+
+Pass `--no-live-search` to skip it even when the key is set. Model defaults to
+`claude-opus-4-8`; override with `STR_AGENT_SEARCH_MODEL`.
+
 ## Scheduling
 
 **Mac (launchd):** `cp com.dave.stragent.plist ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.dave.stragent.plist`
@@ -64,6 +81,7 @@ str_agent/score.py     percentiles, value-add detection, composite
 str_agent/db.py        SQLite: listings, price history, score history
 str_agent/digest.py    HTML digest + Gmail send
 str_agent/ingest.py    Gmail alert parsing / CSV mode
+str_agent/live_search.py  Claude web search for live Redfin candidates
 out/                   agent.db, daily digests, logs
 ```
 

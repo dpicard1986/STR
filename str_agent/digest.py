@@ -1,6 +1,7 @@
 """Daily digest: HTML render + email via Gmail SMTP (App Password). Falls back to writing an HTML file."""
 from __future__ import annotations
 import datetime
+from html import escape
 from pathlib import Path
 
 
@@ -9,10 +10,13 @@ def pct(x, d=1):
 
 
 def money(x):
-    return f"${x:,.0f}"
+    try:
+        return f"${float(x):,.0f}"
+    except (TypeError, ValueError):
+        return str(x)
 
 
-def render(ranked, events, cfg, run_date=None, market_scope=None):
+def render(ranked, events, cfg, run_date=None, market_scope=None, live_candidates=None):
     run_date = run_date or datetime.date.today().isoformat()
     hot = [r for r in ranked if r["score"] >= cfg["scoring"]["hot_score"]
            or r["uw"]["atroi"] >= cfg["scoring"]["hot_atroi"]]
@@ -37,6 +41,17 @@ def render(ranked, events, cfg, run_date=None, market_scope=None):
 
     new_rows = "".join(f"<li>{e['address']} - {money(e['price'])}</li>" for e in new) or "<li>None today</li>"
 
+    live_candidates = live_candidates or []
+    live_rows = "".join(
+        f"<tr><td><a href=\"{escape(str(c.get('url', '')))}\">{escape(str(c.get('address', '?')))}</a><br>"
+        f"<small>{escape(str(c.get('market', '')))}, {escape(str(c.get('state', '')))} - "
+        f"{escape(str(c.get('beds', '?')))}BR/{escape(str(c.get('baths', '?')))}BA - "
+        f"{money(c.get('price'))}</small></td>"
+        f"<td>{escape(str(c.get('note', '')))}</td></tr>"
+        for c in live_candidates
+    ) or ("<tr><td colspan=2>No live candidates (set ANTHROPIC_API_KEY to enable Claude web "
+          "search, or search failed - check logs)</td></tr>")
+
     html = f"""<html><body style="font-family:Georgia,serif;max-width:860px">
 <h2>STR Deals - {run_date}</h2>
 <p><small>Scope: {scope} | {len(new)} new | {len(cuts)} price cuts | {len(hot)} hot |
@@ -44,6 +59,9 @@ weights ATROI {cfg['scoring']['w_atroi']:.0%} / CF {cfg['scoring']['w_cashflow']
 IRR10 {cfg['scoring']['w_irr10']:.0%} | VA multiplier +/-{cfg['scoring']['va_swing']:.0%} |
 rate {cfg['financing']['mortgage_rate']:.2%}, {cfg['financing']['down_payment_pct']:.0%} down |
 regulatory flags shown, never scored</small></p>
+<h3>Live picks (Claude web search)</h3>
+<table border=1 cellpadding=6 cellspacing=0>
+<tr><th>Property (linked to Redfin)</th><th>Why</th></tr>{live_rows}</table>
 <h3>Top ranked</h3>
 <table border=1 cellpadding=6 cellspacing=0>
 <tr><th>#</th><th>Property</th><th>Score</th><th>Y1 after-tax ROI</th><th>Y1 CoC</th>
